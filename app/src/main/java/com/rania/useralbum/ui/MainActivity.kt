@@ -1,6 +1,8 @@
 package com.rania.useralbum.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,6 +47,12 @@ class MainActivity : AppCompatActivity() {
                             layoutManager = LinearLayoutManager(this@MainActivity)
                             adapter = mUserAdapter
                         }
+                        mUserAdapter.onItemClick = { item ->
+                            Log.i(TAG, "user item clicked")
+                            val intent = Intent(this@MainActivity, AlbumActivity::class.java)
+                            intent.putExtra(USER_EXTRA, item.id)
+                            startActivity(intent)
+                        }
                     }
                     setViewVisibility(hasData)
                 }
@@ -65,5 +73,10 @@ class MainActivity : AppCompatActivity() {
             mMainActivityBinding.userNoDataTextView.visibility = View.VISIBLE
             mMainActivityBinding.userRecyclerView.visibility = View.GONE
         }
+    }
+
+    companion object {
+        val TAG = MainActivity::class.java.simpleName
+        val USER_EXTRA = "user_extra"
     }
 }
