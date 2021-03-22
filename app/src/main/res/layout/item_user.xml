@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_medium"
+    android:layout_marginVertical="@dimen/margin_small"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/padding_medium">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/userIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/userName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_user" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/userName"
+            android:layout_width="@dimen/weight_less_size"
+            android:layout_height="@dimen/image_view_size_24"
+            android:layout_margin="@dimen/margin_medium"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userIcon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/userEmailIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/userEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userIcon"
+            app:srcCompat="@drawable/ic_email" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/userEmail"
+            android:layout_width="@dimen/weight_less_size"
+            android:layout_height="@dimen/image_view_size_24"
+            android:layout_margin="@dimen/margin_medium"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userEmailIcon"
+            app:layout_constraintTop_toBottomOf="@id/userName" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/userPhoneIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/userPhone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userEmailIcon"
+            app:srcCompat="@drawable/ic_phone" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/userPhone"
+            android:layout_width="@dimen/weight_less_size"
+            android:layout_height="@dimen/image_view_size_24"
+            android:layout_margin="@dimen/margin_medium"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userPhoneIcon"
+            app:layout_constraintTop_toBottomOf="@id/userEmail" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/userWebsiteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/userWebsite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userPhoneIcon"
+            app:srcCompat="@drawable/ic_website" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/userWebsite"
+            android:layout_width="@dimen/weight_less_size"
+            android:layout_height="@dimen/image_view_size_24"
+            android:layout_margin="@dimen/margin_medium"
+            android:textColor="@color/primaryTextColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/userWebsiteIcon"
+            app:layout_constraintTop_toBottomOf="@id/userPhone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
