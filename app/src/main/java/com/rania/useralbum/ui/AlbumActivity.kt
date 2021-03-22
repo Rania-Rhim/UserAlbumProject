@@ -51,8 +51,8 @@ class AlbumActivity : AppCompatActivity() {
                         }
                         mAlbumAdapter.onItemClick = { item ->
                             Log.i(TAG, "album item clicked")
-                            val intent = Intent(this@AlbumActivity, AlbumActivity::class.java)
-                            intent.putExtra(MainActivity.USER_EXTRA, item.id)
+                            val intent = Intent(this@AlbumActivity, PhotoActivity::class.java)
+                            intent.putExtra(AlbumActivity.ALBUM_EXTRA, item.id)
                             startActivity(intent)
                         }
                     }
@@ -79,5 +79,6 @@ class AlbumActivity : AppCompatActivity() {
 
     companion object {
         val TAG = AlbumActivity::class.java.simpleName
+        val ALBUM_EXTRA = "album_extra"
     }
 }

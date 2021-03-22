@@ -36,5 +36,7 @@
     <dimen name="weight_less_size">0dp</dimen>
     <dimen name="image_view_size_24">24dp</dimen>
     <dimen name="image_view_size_48">48dp</dimen>
+    <dimen name="image_view_size_150">150dp</dimen>
+    <dimen name="image_view_size_600">600dp</dimen>
     <dimen name="card_corner_radius">8dp</dimen>
 </resources>
