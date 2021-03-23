@@ -5,25 +5,27 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rania.useralbum.R
+import com.rania.useralbum.UserAlbumApplication
 import com.rania.useralbum.adapter.UserAdapter
 import com.rania.useralbum.databinding.ActivityMainBinding
 import com.rania.useralbum.model.User
-import com.rania.useralbum.network.UserService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.rania.useralbum.repository.Resource
+import com.rania.useralbum.viewmodel.UserViewModel
+import com.rania.useralbum.viewmodel.UserViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var mMainActivityBinding: ActivityMainBinding
     lateinit var mUserAdapter: UserAdapter
-    lateinit var mUserList: List<User>
+    var mUserList: List<User> = emptyList()
 
-    val mUserServe by lazy {
-        UserService.createNetworkService()
+    private val mUserViewModel: UserViewModel by viewModels {
+        UserViewModelFactory((application as UserAlbumApplication).mUserRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,36 +35,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(mMainActivityBinding.root)
 
         setData()
+        setView()
+        setListener()
     }
 
     private fun setData() {
-        mUserServe.getUserList().enqueue(object : Callback<List<User>> {
-            override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-                if (response.code() == 200 && response.body() != null) {
-                    mUserList = response.body()!!
-                    val hasData = mUserList.isNotEmpty()
+        mUserViewModel.userList.observe(this, Observer {
+            if (it.status == Resource.Status.SUCCESS) {
+                Log.d(TAG, "Status ${it.status}")
+                val hasData = it.data?.isNotEmpty()
 
-                    if (hasData) {
-                        mUserAdapter = UserAdapter(this@MainActivity, mUserList)
-                        mMainActivityBinding.userRecyclerView.apply {
-                            layoutManager = LinearLayoutManager(this@MainActivity)
-                            adapter = mUserAdapter
-                        }
-                        mUserAdapter.onItemClick = { item ->
-                            Log.i(TAG, "user item clicked")
-                            val intent = Intent(this@MainActivity, AlbumActivity::class.java)
-                            intent.putExtra(USER_EXTRA, item.id)
-                            startActivity(intent)
-                        }
-                    }
-                    setViewVisibility(hasData)
+                if (hasData!!) {
+                    Log.d(TAG, "response not empty")
+                    mUserList = it.data
+                    mUserAdapter.updateList(mUserList)
                 }
+                setViewVisibility(hasData)
             }
-
-            override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
         })
     }
 
@@ -73,6 +62,25 @@ class MainActivity : AppCompatActivity() {
         } else {
             mMainActivityBinding.userNoDataTextView.visibility = View.VISIBLE
             mMainActivityBinding.userRecyclerView.visibility = View.GONE
+        }
+    }
+
+    private fun setView() {
+        mUserAdapter = UserAdapter(this@MainActivity, mUserList)
+
+        mMainActivityBinding.userRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = mUserAdapter
+        }
+    }
+
+    private fun setListener() {
+        mUserAdapter.onItemClick = { item ->
+            Log.i(TAG, "user item clicked")
+            val intent = Intent(this@MainActivity, AlbumActivity::class.java)
+            intent.putExtra(USER_EXTRA, item.id)
+            startActivity(intent)
         }
     }
 
