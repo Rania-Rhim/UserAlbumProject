@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.rania.useralbum.db.UserAlbumDataBase
 import com.rania.useralbum.repository.AlbumRepository
+import com.rania.useralbum.repository.PhotoRepository
 import com.rania.useralbum.repository.UserRepository
 
 class UserAlbumApplication : Application() {
@@ -13,6 +14,7 @@ class UserAlbumApplication : Application() {
 
     val mUserRepository by lazy { UserRepository(mUserAlbumDatabase.userDao()) }
     val mAlbumRepository by lazy { AlbumRepository(mUserAlbumDatabase.albumDao()) }
+    val mPhotoRepository by lazy { PhotoRepository(mUserAlbumDatabase.photoDao()) }
 
     override fun onCreate() {
         super.onCreate()

@@ -3,26 +3,28 @@ package com.rania.useralbum.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.rania.useralbum.UserAlbumApplication
 import com.rania.useralbum.adapter.PhotoAdapter
 import com.rania.useralbum.databinding.ActivityPhotoBinding
 import com.rania.useralbum.model.Photo
-import com.rania.useralbum.network.UserService
+import com.rania.useralbum.repository.Resource
 import com.rania.useralbum.utils.Constants
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.rania.useralbum.viewmodel.PhotoViewModel
+import com.rania.useralbum.viewmodel.PhotoViewModelFactory
 
 class PhotoActivity : AppCompatActivity() {
 
     lateinit var mPhotoActivityBinding: ActivityPhotoBinding
     lateinit var mPhotoAdapter: PhotoAdapter
-    lateinit var mPhotoList: List<Photo>
+    var mPhotoList: List<Photo> = emptyList()
     var mAlbumId: Int? = 0
 
-    val mPhotoServe by lazy {
-        UserService.createNetworkService()
+    private val mPhotoViewModel: PhotoViewModel by viewModels {
+        PhotoViewModelFactory((application as UserAlbumApplication).mPhotoRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,40 +34,27 @@ class PhotoActivity : AppCompatActivity() {
         setContentView(mPhotoActivityBinding.root)
 
         setData()
+        setView()
+        setListener()
     }
-
 
     private fun setData() {
         mAlbumId = getIntent().getIntExtra(AlbumActivity.ALBUM_EXTRA, Constants.DEFAULT_ID)
 
-        mPhotoServe.getPhotoList(mAlbumId!!).enqueue(object : Callback<List<Photo>> {
-            override fun onResponse(call: Call<List<Photo>>, response: Response<List<Photo>>) {
-                if (response.code() == 200 && response.body() != null) {
-                    mPhotoList = response.body()!!
-                    val hasData = mPhotoList.isNotEmpty()
+        mPhotoViewModel.photoList(mAlbumId!!).observe(this, Observer {
+            if (it.status == Resource.Status.SUCCESS) {
+                Log.d(TAG, "Status ${it.status}")
+                val hasData = it.data?.isNotEmpty()
 
-                    if (hasData) {
-                        mPhotoAdapter = PhotoAdapter(this@PhotoActivity, mPhotoList)
-                        mPhotoActivityBinding.photoRecyclerView.apply {
-                            layoutManager =
-                                GridLayoutManager(this@PhotoActivity, Constants.COL_SPAN)
-                            adapter = mPhotoAdapter
-                        }
-                        mPhotoAdapter.onItemClick = { item ->
-                            Log.i(TAG, "photo item clicked")
-                            val phd = PhotoDialog.newInstance(item.url)
-                            phd.show(supportFragmentManager, PhotoDialog.TAG)
-                        }
-                    }
-                    setViewVisibility(hasData)
+                if (hasData!!) {
+                    Log.d(TAG, "response not empty")
+                    mPhotoList = it.data
+                    mPhotoAdapter.updateList(mPhotoList)
                 }
+                setViewVisibility(hasData)
             }
-
-            override fun onFailure(call: Call<List<Photo>>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
         })
+
     }
 
     private fun setViewVisibility(hasData: Boolean) {
@@ -75,6 +64,24 @@ class PhotoActivity : AppCompatActivity() {
         } else {
             mPhotoActivityBinding.photoNoDataTextView.visibility = View.VISIBLE
             mPhotoActivityBinding.photoRecyclerView.visibility = View.GONE
+        }
+    }
+
+    private fun setView() {
+        mPhotoAdapter = PhotoAdapter(this@PhotoActivity, mPhotoList)
+        mPhotoActivityBinding.photoRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager =
+                GridLayoutManager(this@PhotoActivity, Constants.COL_SPAN)
+            adapter = mPhotoAdapter
+        }
+    }
+
+    private fun setListener() {
+        mPhotoAdapter.onItemClick = { item ->
+            Log.i(TAG, "photo item clicked")
+            val phd = PhotoDialog.newInstance(item.url)
+            phd.show(supportFragmentManager, PhotoDialog.TAG)
         }
     }
 

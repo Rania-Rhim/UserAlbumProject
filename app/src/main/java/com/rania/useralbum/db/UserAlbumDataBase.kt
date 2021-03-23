@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.rania.useralbum.db.dao.AlbumDao
+import com.rania.useralbum.db.dao.PhotoDao
 import com.rania.useralbum.db.dao.UserDao
 import com.rania.useralbum.model.Album
 import com.rania.useralbum.model.Photo
@@ -20,6 +21,7 @@ abstract class UserAlbumDataBase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun albumDao(): AlbumDao
+    abstract fun photoDao(): PhotoDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the same time
