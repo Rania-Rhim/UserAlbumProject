@@ -8,5 +8,6 @@
     <color name="secondaryDarkColor">#b64fc8</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#8c8c8c</color>
-    <color name="iconColor">#8c8c8c</color>
+    <color name="primaryIconColor">#8c8c8c</color>
+    <color name="secondaryIconColor">#ffffff</color>
 </resources>

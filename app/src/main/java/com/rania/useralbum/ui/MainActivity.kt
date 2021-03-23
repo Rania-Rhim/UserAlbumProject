@@ -3,9 +3,11 @@ package com.rania.useralbum.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rania.useralbum.R
 import com.rania.useralbum.adapter.UserAdapter
 import com.rania.useralbum.databinding.ActivityMainBinding
 import com.rania.useralbum.model.User
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         setData()
     }
-
 
     private fun setData() {
         mUserServe.getUserList().enqueue(object : Callback<List<User>> {
@@ -73,6 +74,26 @@ class MainActivity : AppCompatActivity() {
             mMainActivityBinding.userNoDataTextView.visibility = View.VISIBLE
             mMainActivityBinding.userRecyclerView.visibility = View.GONE
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        val search = menu.findItem(R.id.userSearchBar)
+        val searchView = search.actionView as android.widget.SearchView
+        searchView.queryHint = getString(R.string.user_search_menu)
+        searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                mUserAdapter.updateList(
+                    mUserList.filter { it.name.contains(newText.toString(), true) }
+                )
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 
     companion object {

@@ -4,5 +4,6 @@
     <string name="no_data">No Data</string>
 
     <string name="user_item_name">%1$s (%2$s)</string>
+    <string name="user_search_menu">Search user</string>
 
 </resources>
